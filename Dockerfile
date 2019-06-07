@@ -16,8 +16,9 @@ RUN ./sbt clean dist
 RUN unzip  -d / ./target/universal/kafka-manager-${version}.zip
 RUN mv /kafka-manager-${version} /kafka-manager
 
-FROM dev.artifactory.vas.int.bell.ca/wnc/arc/8-jdk-alpine-curl AS PACKAGE
-RUN apk --no-cache add bash
+FROM openjdk:8-jdk-alpine AS PACKAGE
+RUN apk --no-cache add bash curl ca-certificates
+RUN update-ca-certificates
 RUN unset http_proxy && unset https_proxy && unset no_proxy
 WORKDIR /usr/local/
 COPY --from=BUILD_STAGE /kafka-manager ./kafka-manager
